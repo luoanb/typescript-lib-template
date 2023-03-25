@@ -8,6 +8,8 @@ import json from "@rollup/plugin-json";
 // import nodePolyfills from "rollup-plugin-polyfill-node";
 import nodePolyfills from "rollup-plugin-node-polyfills";
 // import esbuild from "rollup-plugin-esbuild";
+import { terser } from "rollup-plugin-terser";
+import cleanup from "rollup-plugin-cleanup";
 
 // import { name } from "./package.json";
 const name = "yibao";
@@ -120,12 +122,15 @@ export default defineConfig([
           ie: "8",
         },
       }),
+      cleanup(),
+      terser(),
     ],
     output: [
       {
         name,
         file: "./dist/index_umd_full.js",
         format: "umd",
+        // minifyInternalExports
       },
     ],
   },
