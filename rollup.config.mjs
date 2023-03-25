@@ -36,22 +36,12 @@ export default defineConfig([
     output: [
       {
         name,
-        file: "./dist/main_umd.js",
-        format: "umd"
-      },
-      {
-        name,
         file: "./dist/index.mjs",
         format: "es"
       },
       {
         name,
         file: "./dist/index.cjs",
-        format: "commonjs"
-      },
-      {
-        name,
-        file: "./dist/index.d.ts",
         format: "commonjs"
       }
     ]
