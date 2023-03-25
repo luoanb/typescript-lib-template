@@ -5,7 +5,9 @@ import { nodeResolve as resolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import { babel } from "@rollup/plugin-babel";
 import json from "@rollup/plugin-json";
-import esbuild from "rollup-plugin-esbuild";
+// import nodePolyfills from "rollup-plugin-polyfill-node";
+import nodePolyfills from "rollup-plugin-node-polyfills";
+// import esbuild from "rollup-plugin-esbuild";
 
 // import { name } from "./package.json";
 const name = "yibao";
@@ -31,20 +33,20 @@ export default defineConfig([
   //   ]
   // },
   {
-    input: "./src/main.ts",
+    input: "./src/index.ts",
     plugins: [typescript()],
     output: [
       {
         name,
         file: "./dist/index.mjs",
-        format: "es"
+        format: "es",
       },
       {
         name,
         file: "./dist/index.cjs",
-        format: "commonjs"
-      }
-    ]
+        format: "commonjs",
+      },
+    ],
   },
   {
     input: "./src/main.ts",
@@ -53,40 +55,78 @@ export default defineConfig([
       {
         name,
         file: "./dist/index.d.ts",
-        format: "commonjs"
-      }
-    ]
+        format: "commonjs",
+      },
+    ],
   },
   {
-    input: "./src/main.ts",
+    input: "./src/legacy.ts",
     plugins: [
       typescript(),
       commonjs(),
       json(),
-      // resolve({
-      //   extensions: [".tsx", ".ts", ".js"]
-      // }),
       babel({
         presets: [
           [
             "@babel/preset-env",
-            {
-              useBuiltIns: "entry"
-            }
+            // {
+            //   useBuiltIns: "entry",
+            //   corejs: "2.6.12",
+            // },
           ],
         ],
         targets: {
           chrome: "58",
-          ie: "8"
-        }
-      })
+          ie: "8",
+        },
+      }),
     ],
     output: [
       {
         name,
-        file: "./dist/main_umd.js",
-        format: "umd"
-      }
-    ]
-  }
+        file: "./dist/index_umd.js",
+        format: "umd",
+      },
+    ],
+  },
+  {
+    input: "./src/legacy.ts",
+    plugins: [
+      typescript(),
+      // nodePolyfills(),
+      resolve({
+        extensions: [".tsx", ".ts", ".js", "mjs", "cjs", "jsx"],
+      }),
+      commonjs(),
+      json(),
+      nodePolyfills(),
+      babel({
+        presets: [
+          // ["env"],
+          [
+            "@babel/preset-env",
+            {
+              useBuiltIns: "entry",
+              corejs: "2.6.12",
+              // targets: {
+              //   chrome: "58",
+              //   ie: "8",
+              // },
+            },
+          ],
+        ],
+        targets: {
+          chrome: "58",
+          ie: "8",
+        },
+      }),
+    ],
+    output: [
+      {
+        name,
+        file: "./dist/index_umd_full.js",
+        format: "umd",
+      },
+    ],
+  },
 ]);
