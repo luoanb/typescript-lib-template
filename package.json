@@ -6,7 +6,9 @@
   "types": "dist/main.d.ts",
   "module": "dist/main.mjs",
   "scripts": {
+    "dev": "rollup --config rollup.config.mjs --watch",
     "build": "rollup --config rollup.config.mjs",
+    "build:umd": "rollup --config rollup.config.umd.mjs",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
